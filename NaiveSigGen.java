@@ -43,12 +43,12 @@ public class NaiveSigGen {
 				}
 				else if(queryFieldsToCheck[i][indexOfDataType].equals("int"))
 				{
-					System.out.println("Inside int checker");
+//					System.out.println("Inside int checker");
 					switch(queryFieldsToCheck[i][indexOfIntType])
 					{
 					case "<":
 						
-						System.out.println("Inside case <");
+//						System.out.println("Inside case <");
 					
 						int val = Integer.parseInt(valueOfMember);
 						int refVal = Integer.parseInt(queryFieldsToCheck[i][1]);
@@ -62,7 +62,7 @@ public class NaiveSigGen {
 						break;
 					case ">":
 						
-						System.out.println("Inside case >");
+//						System.out.println("Inside case >");
 						
 						int val2 = Integer.parseInt(valueOfMember);
 						int refVal2 = Integer.parseInt(queryFieldsToCheck[i][1]);

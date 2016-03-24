@@ -307,6 +307,51 @@ public class OptSigGen {
 		printSignBits();
 	}
 	
+	//this function is used to trigger the signature generation as a whole
+	public void triggerSignatureSet(Tuple t)
+	{
+		//triggering greater than vals
+		for(int i=0; i<grtrVals.size(); i++)
+		{
+			ArrayList<String> element = grtrVals.get(i);
+			String elementNameToSearch = element.get(0);
+			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
+			binarySearchOnElement(element, value, 2);
+		}
+		
+		//trigger lesser than vals
+		for(int i=0; i<lessVals.size(); i++)
+		{
+			ArrayList<String> element = lessVals.get(i);
+			String elementNameToSearch = element.get(0);
+			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
+			binarySearchOnElement(element, value, 1);
+		}
+		
+		convertEqValsToEqHash();
+		
+		//TODO : Add code to trigger equal vals
+		
+		for(int i=0; i<eqHash.size(); i++)
+		{
+			ModHashMap element = eqHash.get(i);
+			String elementNameToSearch = element.elementName;
+			String value = t.findMemberValue(elementNameToSearch);
+			hashSearchEqVals(element,value);
+		}
+	}
+	
+	//this function would search the hash for eqVals
+	public void hashSearchEqVals(ModHashMap m, String value)
+	{
+		int locationOfSignBit = m.findKey(value);
+		if(locationOfSignBit!=-1)
+		{
+			//key exists in the hash
+			signGenerated[locationOfSignBit] = 1;
+		}
+	}
+	
 	//this function would do binary search and set the signatures accordingly
 	public void binarySearchOnElement(ArrayList<String> element, int value, int mode)
 	{

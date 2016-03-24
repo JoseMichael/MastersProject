@@ -23,7 +23,7 @@ public class Tuple {
 		{
 			if(memberName.equals(membersAndValues[j][0]))
 			{
-				System.out.println("Checking if "+memberName+" and "+membersAndValues[j][0]+" are equal");
+//				System.out.println("Checking if "+memberName+" and "+membersAndValues[j][0]+" are equal");
 				return membersAndValues[j][1];
 			}
 		}
