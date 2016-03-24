@@ -88,6 +88,7 @@ public class OptSigGen {
 		
 		removeEmptyListsFromMetaData();
 		sortMetaDataHolders();
+		convertEqValsToEqHash();
 	}
 	
 	//this function is used to remove lists that only contain the name of the element
@@ -311,6 +312,7 @@ public class OptSigGen {
 	public void triggerSignatureSet(Tuple t)
 	{
 		//triggering greater than vals
+//		long startTime = System.nanoTime();
 		for(int i=0; i<grtrVals.size(); i++)
 		{
 			ArrayList<String> element = grtrVals.get(i);
@@ -318,8 +320,11 @@ public class OptSigGen {
 			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
 			binarySearchOnElement(element, value, 2);
 		}
+//		long endTime = System.nanoTime();
+//		System.out.println("grtrVals binary search took " + (endTime - startTime) + " nanoseconds");
 		
 		//trigger lesser than vals
+//		startTime = System.nanoTime();
 		for(int i=0; i<lessVals.size(); i++)
 		{
 			ArrayList<String> element = lessVals.get(i);
@@ -327,11 +332,10 @@ public class OptSigGen {
 			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
 			binarySearchOnElement(element, value, 1);
 		}
+//		endTime = System.nanoTime();
+//		System.out.println("lessVals binary search took " + (endTime - startTime) + " nanoseconds");
 		
-		convertEqValsToEqHash();
-		
-		//TODO : Add code to trigger equal vals
-		
+//		startTime = System.nanoTime();
 		for(int i=0; i<eqHash.size(); i++)
 		{
 			ModHashMap element = eqHash.get(i);
@@ -339,6 +343,8 @@ public class OptSigGen {
 			String value = t.findMemberValue(elementNameToSearch);
 			hashSearchEqVals(element,value);
 		}
+//		endTime = System.nanoTime();
+//		System.out.println("eqHash comparison took " + (endTime - startTime) + " nanoseconds");
 	}
 	
 	//this function would search the hash for eqVals
