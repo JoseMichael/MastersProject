@@ -37,6 +37,8 @@ public class OptSigGen {
 		
 		ArrayList<String> list = new ArrayList<String>();
 		int initalCounter = 0;
+		
+		long startTime = System.nanoTime();
 		while(initalCounter!=incomingQueryFields.length)
 		{
 			if(!list.contains(incomingQueryFields[initalCounter][indexOfElementName]))
@@ -85,10 +87,23 @@ public class OptSigGen {
 			
 			initalCounter++;
 		}
+		long endTime = System.nanoTime();
+		System.out.println("valueDistiller initial part took " + (endTime - startTime) + " nanoseconds");
 		
+		startTime = System.nanoTime();
 		removeEmptyListsFromMetaData();
+		endTime = System.nanoTime();
+		System.out.println("removeEmptyListsFromMetaData part took " + (endTime - startTime) + " nanoseconds");
+		
+		startTime = System.nanoTime();
 		sortMetaDataHolders();
+		endTime = System.nanoTime();
+		System.out.println("sortMetaDataHolders part took " + (endTime - startTime) + " nanoseconds");
+		
+		startTime = System.nanoTime();
 		convertEqValsToEqHash();
+		endTime = System.nanoTime();
+		System.out.println("convertEqValsToEqHash part took " + (endTime - startTime) + " nanoseconds");
 	}
 	
 	//this function is used to remove lists that only contain the name of the element
@@ -161,12 +176,15 @@ public class OptSigGen {
 	public void sortMetaDataHolders()
 	{
 //		System.out.println("Sorting lessVals ");
+		long startTime = System.nanoTime();
 		for(int i=0; i<lessVals.size(); i++)
 		{
 			ArrayList<String> element = lessVals.get(i);
 			element = sortArrayList(element);
 			lessVals.set(i, element);
 		}
+		long endTime = System.nanoTime();
+		System.out.println("lessVals sorting took " + (endTime - startTime) + " nanoseconds");
 		
 //		System.out.println("Sorting lessVals ");
 		for(int i=0; i<grtrVals.size(); i++)
@@ -284,7 +302,7 @@ public class OptSigGen {
 	{
 		signGenerated = new int[length];
 		for(int i=0; i<length; i++)
-			signGenerated[i] = -1;
+			signGenerated[i] = 0;
 	}
 	
 	//function used to print sign bits
@@ -380,7 +398,7 @@ public class OptSigGen {
 				if(mode==1)
 				{
 					//setting signs for values lesser than
-					setSignBits(element,first,middle,0);
+//					setSignBits(element,first,middle,0);
 				}
 				else if(mode==2)
 				{
@@ -397,11 +415,11 @@ public class OptSigGen {
 				if(mode==1)
 				{
 					setSignBits(element,middle+1,last,1);
-					setSignBits(element,first,middle,0);
+//					setSignBits(element,first,middle,0);
 				}
 				else if(mode==2)
 				{
-					setSignBits(element,middle,last,0);
+//					setSignBits(element,middle,last,0);
 					setSignBits(element,first,middle-1,1);
 				}
 				
@@ -417,7 +435,7 @@ public class OptSigGen {
 				}
 				else if(mode==2)
 				{
-					setSignBits(element, middle, last, 0);
+//					setSignBits(element, middle, last, 0);
 				}
 				
 				last = middle-1;
