@@ -18,7 +18,7 @@ public class NewDriver {
 				*/
 		
 		PredicateGenerator p = new PredicateGenerator();
-		String valuesToFind[][] = p.generatePredicates(30);
+		String valuesToFind[][] = p.generatePredicates(1000000);
 		
 		//this is used to print the predicates
 		/*
@@ -35,9 +35,9 @@ public class NewDriver {
 		Tuple t = new Tuple();
 		NaiveSigGen nsg = new NaiveSigGen();
 		t.addMembersAndValues(tupleValues);
+		nsg.initializeQueryFieldsToCheck(valuesToFind);
 		
 		long startTime = System.nanoTime();
-		nsg.initializeQueryFieldsToCheck(valuesToFind);
 		int sign[] = nsg.generateSig(t);
 		long endTime = System.nanoTime();
 		System.out.println("Naive Sign Generator took " + (endTime - startTime) + " nanoseconds");

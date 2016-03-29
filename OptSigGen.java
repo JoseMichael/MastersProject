@@ -210,31 +210,6 @@ public class OptSigGen {
 		
 	}
 	
-	//this function is used to sort the individual arraylists using the values in it
-	//as index to the query received
-	//TODO: Remove deprecated function
-	public ArrayList<String> sortArrayList(ArrayList<String> element)
-	{
-		for(int i=1; i<element.size()-1;i++)
-		{
-			for(int j=i+1; j<element.size(); j++)
-			{
-				int valOfi = Integer.parseInt(queryFieldsToCheck[Integer.parseInt(element.get(i))][indexOfElementValue]);
-				int valOfj = Integer.parseInt(queryFieldsToCheck[Integer.parseInt(element.get(j))][indexOfElementValue]);
-				
-				if(valOfi>valOfj)
-				{
-					//need to switch i and j
-					int temp = Integer.parseInt(element.get(i));
-					element.set(i, element.get(j));
-					element.set(j, Integer.toString(temp));
-				}
-			}
-		}
-		
-		return element;
-	}
-	
 	//this function is used to convert the arraylist of arraylist of strings into
 	//arraylist of ModHashMaps
 	public void convertEqValsToEqHash()
@@ -272,26 +247,7 @@ public class OptSigGen {
 			p.printHashMap();
 		}
 	}
-	
-	//function to find number of unique elements
-	//TODO: Remove deprecated function
-	public int findUniqueElements(String incomingQueryFields[][])
-	{
-		ArrayList<String> list = new ArrayList<String>();
-		int count=0;
 		
-		for(int i=0; i<incomingQueryFields.length; i++)
-		{
-			if(!list.contains(incomingQueryFields[i][indexOfElementName]))
-			{
-				list.add(incomingQueryFields[i][indexOfElementName]);
-				count++;
-			}
-		}
-		
-		return count;
-	}
-	
 	public void resetMetaDataArrays()
 	{
 		eqVals = new ArrayList<MetaDataHolder>();
@@ -340,14 +296,6 @@ public class OptSigGen {
 		System.out.println();
 	}
 	
-	//TODO: Delete this
-//	public void randomDriverFunction()
-//	{
-//		ArrayList<String> element = grtrVals.get(0);
-//		binarySearchOnElement(element,120,2);
-//		printSignBits();
-//	}
-//	
 	//this function is used to trigger the signature generation as a whole
 	public void triggerSignatureSet(Tuple t)
 	{
@@ -413,14 +361,12 @@ public class OptSigGen {
 	}
 	
 	//this function would do binary search and set the signatures accordingly
-	//TODO: change to ArrayList<AddressAndValue>
 	public void binarySearchOnElement(MetaDataHolder element, int value, int mode)
 	{
 		//this function has two modes
 		//1 : for values lesser than
 		//2 : for values greater than
 		
-		//TODO: implement mode for when VALUE is found
 		int first = 0;
 		int last = element.listOfValues.size()-1;
 		int middle = (last+first)/2;
@@ -450,7 +396,6 @@ public class OptSigGen {
 			else if(valOfElement == value)
 			{
 				//value found
-				//TODO: implement the modes for this case
 				if(mode==1)
 				{
 					setSignBits(element,middle+1,last,1);
