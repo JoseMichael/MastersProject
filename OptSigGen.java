@@ -18,42 +18,30 @@ public class OptSigGen {
 //	String lessVals[][];
 //	String grtrVals[][];
 	
-	ArrayList<ArrayList<String>> eqVals;
-	ArrayList<ArrayList<String>> lessVals;
-	ArrayList<ArrayList<String>> grtrVals;
+	ArrayList<MetaDataHolder> eqVals;
+	ArrayList<MetaDataHolder> lessVals;
+	ArrayList<MetaDataHolder> grtrVals;
 	
 	ArrayList<ModHashMap> eqHash;
 	
 	//function to chop incoming data and feed to above data structs
 	public void valueDistiller(String incomingQueryFields[][])
 	{
-		//find unique number of elements in incomingQueryFields
-//		int initSize = findUniqueElements(incomingQueryFields);
-//		eqVals = new String[initSize][incomingQueryFields.length];
-//		lessVals = new String[initSize][incomingQueryFields.length];
-//		grtrVals = new String[initSize][incomingQueryFields.length];
-		
-//		int eqCount=0, lessCount=0, grtrCount=0;
-		
 		ArrayList<String> list = new ArrayList<String>();
 		int initalCounter = 0;
 		
-		long startTime = System.nanoTime();
+//		long startTime = System.nanoTime();
 		while(initalCounter!=incomingQueryFields.length)
 		{
 			if(!list.contains(incomingQueryFields[initalCounter][indexOfElementName]))
 			{
-				//if element has not already been processed
+				MetaDataHolder eqValsHolder = new MetaDataHolder(incomingQueryFields[initalCounter][indexOfElementName]); 
+				MetaDataHolder lessValsHolder = new MetaDataHolder(incomingQueryFields[initalCounter][indexOfElementName]); 
+				MetaDataHolder grtrValsHolder = new MetaDataHolder(incomingQueryFields[initalCounter][indexOfElementName]);
 				
-//				int eqCount2=-1, lessCount2=-1, grtrCount2=-1; 
-				
-				ArrayList<String> eqValsHolder = new ArrayList<String>(); 
-				ArrayList<String> lessValsHolder = new ArrayList<String>(); 
-				ArrayList<String> grtrValsHolder = new ArrayList<String>();
-				
-				eqValsHolder.add(incomingQueryFields[initalCounter][indexOfElementName]);
-				lessValsHolder.add(incomingQueryFields[initalCounter][indexOfElementName]);
-				grtrValsHolder.add(incomingQueryFields[initalCounter][indexOfElementName]);
+//				eqValsHolder.add(incomingQueryFields[initalCounter][indexOfElementName]);
+//				lessValsHolder.add(incomingQueryFields[initalCounter][indexOfElementName]);
+//				grtrValsHolder.add(incomingQueryFields[initalCounter][indexOfElementName]);
 				
 				for(int iter=initalCounter; iter<incomingQueryFields.length; iter++)
 				{
@@ -61,17 +49,29 @@ public class OptSigGen {
 					if(incomingQueryFields[iter][indexOfIntType].equals("=")&&
 							(incomingQueryFields[iter][indexOfElementName]==incomingQueryFields[initalCounter][indexOfElementName]))
 					{
-						eqValsHolder.add(String.valueOf(iter));
+						//eqValsHolder.add(String.valueOf(iter));
+						String address = String.valueOf(iter);
+						String value = incomingQueryFields[iter][indexOfElementValue];
+						AddressAndValue anv = new AddressAndValue(address, value);
+						eqValsHolder.addAddressValue(anv);
 					}
 					else if(incomingQueryFields[iter][indexOfIntType].equals("<")&&
 					(incomingQueryFields[iter][indexOfElementName]==incomingQueryFields[initalCounter][indexOfElementName]))
 					{
-						lessValsHolder.add(String.valueOf(iter));
+//						lessValsHolder.add(String.valueOf(iter));
+						String address = String.valueOf(iter);
+						String value = incomingQueryFields[iter][indexOfElementValue];
+						AddressAndValue anv = new AddressAndValue(address, value);
+						lessValsHolder.addAddressValue(anv);
 					}
 					else if(incomingQueryFields[iter][indexOfIntType].equals(">")&&
 					(incomingQueryFields[iter][indexOfElementName]==incomingQueryFields[initalCounter][indexOfElementName]))
 					{
-						grtrValsHolder.add(String.valueOf(iter));
+//						grtrValsHolder.add(String.valueOf(iter));
+						String address = String.valueOf(iter);
+						String value = incomingQueryFields[iter][indexOfElementValue];
+						AddressAndValue anv = new AddressAndValue(address, value);
+						grtrValsHolder.addAddressValue(anv);
 					}
 				
 				}
@@ -87,23 +87,23 @@ public class OptSigGen {
 			
 			initalCounter++;
 		}
-		long endTime = System.nanoTime();
-		System.out.println("valueDistiller initial part took " + (endTime - startTime) + " nanoseconds");
+//		long endTime = System.nanoTime();
+//		System.out.println("valueDistiller initial part took " + (endTime - startTime) + " nanoseconds");
 		
-		startTime = System.nanoTime();
+//		startTime = System.nanoTime();
 		removeEmptyListsFromMetaData();
-		endTime = System.nanoTime();
-		System.out.println("removeEmptyListsFromMetaData part took " + (endTime - startTime) + " nanoseconds");
+//		endTime = System.nanoTime();
+//		System.out.println("removeEmptyListsFromMetaData part took " + (endTime - startTime) + " nanoseconds");
 		
-		startTime = System.nanoTime();
+//		startTime = System.nanoTime();
 		sortMetaDataHolders();
-		endTime = System.nanoTime();
-		System.out.println("sortMetaDataHolders part took " + (endTime - startTime) + " nanoseconds");
+//		endTime = System.nanoTime();
+//		System.out.println("sortMetaDataHolders part took " + (endTime - startTime) + " nanoseconds");
 		
-		startTime = System.nanoTime();
+//		startTime = System.nanoTime();
 		convertEqValsToEqHash();
-		endTime = System.nanoTime();
-		System.out.println("convertEqValsToEqHash part took " + (endTime - startTime) + " nanoseconds");
+//		endTime = System.nanoTime();
+//		System.out.println("convertEqValsToEqHash part took " + (endTime - startTime) + " nanoseconds");
 	}
 	
 	//this function is used to remove lists that only contain the name of the element
@@ -112,22 +112,22 @@ public class OptSigGen {
 		//used for printing val for eqVals
 		for(int i=0; i<eqVals.size(); i++)
 		{
-			ArrayList<String> element = eqVals.get(i);
-			if(element.size()==1)
+			MetaDataHolder element = eqVals.get(i);
+			if(element.isListEmpty())
 				eqVals.remove(i);
 		}
 		
 		for(int i=0; i<lessVals.size(); i++)
 		{
-			ArrayList<String> element = lessVals.get(i);
-			if(element.size()==1)
+			MetaDataHolder element = lessVals.get(i);
+			if(element.isListEmpty())
 				lessVals.remove(i);
 		}
 		
 		for(int i=0; i<grtrVals.size(); i++)
 		{
-			ArrayList<String> element = grtrVals.get(i);
-			if(element.size()==1)
+			MetaDataHolder element = grtrVals.get(i);
+			if(element.isListEmpty())
 				grtrVals.remove(i);
 		}
 		
@@ -138,66 +138,81 @@ public class OptSigGen {
 	{
 		//used for printing val for eqVals
 		System.out.println("Printing eqvals ");
+		
 		for(int i=0; i<eqVals.size(); i++)
 		{
-			ArrayList<String> element = eqVals.get(i);
-			for(int j=0; j<element.size(); j++)
-			{
-				System.out.print(element.get(j)+" ");
-			}
+			MetaDataHolder element = eqVals.get(i);
+			element.printList();
 		}
 		
 		System.out.println();
 		
 		System.out.println("Printing lessVals ");
+//		for(int i=0; i<lessVals.size(); i++)
+//		{
+//			ArrayList<String> element = lessVals.get(i);
+//			for(int j=0; j<element.size(); j++)
+//			{
+//				System.out.print(element.get(j)+" ");
+//			}
+//		}
+		
 		for(int i=0; i<lessVals.size(); i++)
 		{
-			ArrayList<String> element = lessVals.get(i);
-			for(int j=0; j<element.size(); j++)
-			{
-				System.out.print(element.get(j)+" ");
-			}
+			MetaDataHolder element = lessVals.get(i);
+			element.printList();
 		}
+		
 		
 		System.out.println();
 		
 		System.out.println("Printing grtrVals ");
-		for(int i=0; i<grtrVals.size(); i++)
+//		for(int i=0; i<grtrVals.size(); i++)
+//		{
+//			ArrayList<String> element = grtrVals.get(i);
+//			for(int j=0; j<element.size(); j++)
+//			{
+//				System.out.print(element.get(j)+" ");
+//			}
+//		}
+		
+		for(int i=0; i<lessVals.size(); i++)
 		{
-			ArrayList<String> element = grtrVals.get(i);
-			for(int j=0; j<element.size(); j++)
-			{
-				System.out.print(element.get(j)+" ");
-			}
+			MetaDataHolder element = grtrVals.get(i);
+			element.printList();
 		}
+		
 	}
 	
 	//this function is used to sort the values of lessvals and grtrvals
 	public void sortMetaDataHolders()
 	{
 //		System.out.println("Sorting lessVals ");
-		long startTime = System.nanoTime();
+//		long startTime = System.nanoTime();
 		for(int i=0; i<lessVals.size(); i++)
 		{
-			ArrayList<String> element = lessVals.get(i);
-			element = sortArrayList(element);
-			lessVals.set(i, element);
+			MetaDataHolder element = lessVals.get(i);
+			element.sortValues();
 		}
-		long endTime = System.nanoTime();
-		System.out.println("lessVals sorting took " + (endTime - startTime) + " nanoseconds");
+//		long endTime = System.nanoTime();
+//		System.out.println("lessVals sorting took " + (endTime - startTime) + " nanoseconds");
 		
 //		System.out.println("Sorting lessVals ");
 		for(int i=0; i<grtrVals.size(); i++)
 		{
-			ArrayList<String> element = grtrVals.get(i);
-			element = sortArrayList(element);
-			grtrVals.set(i, element);
+//			ArrayList<String> element = grtrVals.get(i);
+//			element = sortArrayList(element);
+//			grtrVals.set(i, element);
+			
+			MetaDataHolder element = grtrVals.get(i);
+			element.sortValues();
 		}
 		
 	}
 	
 	//this function is used to sort the individual arraylists using the values in it
 	//as index to the query received
+	//TODO: Remove deprecated function
 	public ArrayList<String> sortArrayList(ArrayList<String> element)
 	{
 		for(int i=1; i<element.size()-1;i++)
@@ -228,13 +243,19 @@ public class OptSigGen {
 		
 		for(int i=0; i<eqVals.size(); i++)
 		{
-			ArrayList<String> element = eqVals.get(i);
+			MetaDataHolder element = eqVals.get(i);
 			
-			ModHashMap m = new ModHashMap(element.get(0));
-			for(int j=1; j<element.size(); j++)
+			ModHashMap m = new ModHashMap(element.elementName);
+			for(int j=0; j<element.listOfValues.size(); j++)
 			{
-				String key = queryFieldsToCheck[Integer.parseInt(element.get(j))][indexOfElementValue];
-				int value = Integer.parseInt(element.get(j));
+//				String key = queryFieldsToCheck[Integer.parseInt(element.get(j))][indexOfElementValue];
+//				int value = Integer.parseInt(element.get(j));
+//				m.addToHash(key, value);
+				
+				//key is the value of the element and value is the position of the sign bit
+				AddressAndValue adv = element.listOfValues.get(j);
+				String key = adv.value;
+				int value = Integer.parseInt(adv.address);
 				m.addToHash(key, value);
 			}
 			
@@ -253,6 +274,7 @@ public class OptSigGen {
 	}
 	
 	//function to find number of unique elements
+	//TODO: Remove deprecated function
 	public int findUniqueElements(String incomingQueryFields[][])
 	{
 		ArrayList<String> list = new ArrayList<String>();
@@ -272,9 +294,9 @@ public class OptSigGen {
 	
 	public void resetMetaDataArrays()
 	{
-		eqVals = new ArrayList<ArrayList<String>>();
-		lessVals = new ArrayList<ArrayList<String>>();
-		grtrVals = new ArrayList<ArrayList<String>>();
+		eqVals = new ArrayList<MetaDataHolder>();
+		lessVals = new ArrayList<MetaDataHolder>();
+		grtrVals = new ArrayList<MetaDataHolder>();
 		
 	}
 	
@@ -319,22 +341,29 @@ public class OptSigGen {
 	}
 	
 	//TODO: Delete this
-	public void randomDriverFunction()
-	{
-		ArrayList<String> element = grtrVals.get(0);
-		binarySearchOnElement(element,120,2);
-		printSignBits();
-	}
-	
+//	public void randomDriverFunction()
+//	{
+//		ArrayList<String> element = grtrVals.get(0);
+//		binarySearchOnElement(element,120,2);
+//		printSignBits();
+//	}
+//	
 	//this function is used to trigger the signature generation as a whole
 	public void triggerSignatureSet(Tuple t)
 	{
 		//triggering greater than vals
 //		long startTime = System.nanoTime();
+//		for(int i=0; i<grtrVals.size(); i++)
+//		{
+//			ArrayList<String> element = grtrVals.get(i);
+//			String elementNameToSearch = element.get(0);
+//			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
+//			binarySearchOnElement(element, value, 2);
+//		}
 		for(int i=0; i<grtrVals.size(); i++)
 		{
-			ArrayList<String> element = grtrVals.get(i);
-			String elementNameToSearch = element.get(0);
+			MetaDataHolder element = grtrVals.get(i);
+			String elementNameToSearch = element.elementName;
 			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
 			binarySearchOnElement(element, value, 2);
 		}
@@ -343,10 +372,17 @@ public class OptSigGen {
 		
 		//trigger lesser than vals
 //		startTime = System.nanoTime();
+//		for(int i=0; i<lessVals.size(); i++)
+//		{
+//			ArrayList<String> element = lessVals.get(i);
+//			String elementNameToSearch = element.get(0);
+//			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
+//			binarySearchOnElement(element, value, 1);
+//		}
 		for(int i=0; i<lessVals.size(); i++)
 		{
-			ArrayList<String> element = lessVals.get(i);
-			String elementNameToSearch = element.get(0);
+			MetaDataHolder element = lessVals.get(i);
+			String elementNameToSearch = element.elementName;
 			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
 			binarySearchOnElement(element, value, 1);
 		}
@@ -377,20 +413,23 @@ public class OptSigGen {
 	}
 	
 	//this function would do binary search and set the signatures accordingly
-	public void binarySearchOnElement(ArrayList<String> element, int value, int mode)
+	//TODO: change to ArrayList<AddressAndValue>
+	public void binarySearchOnElement(MetaDataHolder element, int value, int mode)
 	{
 		//this function has two modes
 		//1 : for values lesser than
 		//2 : for values greater than
 		
 		//TODO: implement mode for when VALUE is found
-		int first = 1;
-		int last = element.size()-1;
+		int first = 0;
+		int last = element.listOfValues.size()-1;
 		int middle = (last+first)/2;
 		
 		while(first<=last)
 		{
-			int valOfElement = Integer.parseInt(queryFieldsToCheck[Integer.parseInt(element.get(middle))][indexOfElementValue]);
+			//int valOfElement = Integer.parseInt(queryFieldsToCheck[Integer.parseInt(element.get(middle))][indexOfElementValue]);
+			AddressAndValue anv = element.listOfValues.get(middle);
+			int valOfElement = Integer.parseInt(anv.value);
 			if(valOfElement<value)
 			{
 				//value is in the lower half, need to set all signatures prior
@@ -446,7 +485,7 @@ public class OptSigGen {
 	}
 	
 	//this function is used to mass set signature values
-	public void setSignBits(ArrayList<String> element, int first, int last, int mode)
+	public void setSignBits(MetaDataHolder element, int first, int last, int mode)
 	{
 		//mode options
 		//1 : sets sign to 1
@@ -457,7 +496,7 @@ public class OptSigGen {
 		
 		for(int i=first; i<=last; i++)
 		{
-			int indexOfSign = Integer.parseInt(element.get(i));
+			int indexOfSign = Integer.parseInt(element.listOfValues.get(i).address);
 			signGenerated[indexOfSign] = mode;
 		}
 	}
