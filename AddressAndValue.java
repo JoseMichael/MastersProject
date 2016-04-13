@@ -2,7 +2,7 @@ package finalprojectdb;
 
 public class AddressAndValue implements Comparable<AddressAndValue>{
 	
-	String address;
+	int address;
 	String value;
 	
 	public int getValue()
@@ -16,7 +16,7 @@ public class AddressAndValue implements Comparable<AddressAndValue>{
 //		this.value = value;
 //	}
 	
-	public AddressAndValue(String address, String value)
+	public AddressAndValue(int address, String value)
 	{
 		this.address = address;
 		this.value = value;

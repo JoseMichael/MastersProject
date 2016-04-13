@@ -7,11 +7,23 @@ public class PredicateGenerator {
 	TextFileReader tfr = new TextFileReader();
 	String companyNames[] = tfr.getListOfNames();
 		
+	//all tuples generated randomly, no preference
+	/*
 	String listOfNames[] = {"Price","Quantity","Name"};
 	int listOfValuesInt[][] = {{0,100000},{0,100000000},{}};
 	String listOfValuesString[][] = {{},{},companyNames};
 	String listOfOperands[][] = {{"<",">","="},{"<",">","="},{"="}};
 	String elementType[] = {"int","int","String"};
+	*/
+	
+	//for only one variable with >
+	String listOfNames[] = {"Price"};
+	int listOfValuesInt[][] = {{0,100000}};
+	String listOfValuesString[][] = {{}};
+	String listOfOperands[][] = {{"<"}};
+	String elementType[] = {"int"};
+	
+	
 //	String listOfNames[] = {"Price"};
 //	int listOfValues[][] = {{0,1000000}};
 //	String listOfOperands[] = {">"};

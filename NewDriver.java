@@ -2,7 +2,7 @@ package finalprojectdb;
 
 public class NewDriver {
 	
-	public static void compareSigns(int naiveSign[], int optSign[])
+	public void compareSigns(int naiveSign[], int optSign[])
 	{
 		//flag is set if the signs are not same
 		int flag=0;
@@ -28,7 +28,7 @@ public class NewDriver {
 			System.out.println("Signs were same");
 	}
 	
-	public static void printPredicates(String valuesToFind[][])
+	public void printPredicates(String valuesToFind[][])
 	{
 		for(int i=0; i<valuesToFind.length;i++)
 		{
@@ -40,11 +40,15 @@ public class NewDriver {
 		}
 	}
 	
-	public static void main(String args[])
+	public void runCode(int noOfPredsToGen)
 	{
-		String tupleValues[][] = {{"Name","ZIOP"},{"Price","5000"},{"Quantity","30000"}};
+		String tupleValues[][] = {{"Name","ZIOP"},{"Price","50000"},{"Quantity","30000"}};
 		
-		int noOfPredsToGen = 4;
+		//int noOfPredsToGen = 4;
+		//System.out.println();
+		//System.out.println();
+		//System.out.println("Analysis for noOfPredsToGen = "+noOfPredsToGen);
+		System.out.print(noOfPredsToGen+"\t");
 		
 		
 		/*
@@ -66,10 +70,16 @@ public class NewDriver {
 				{"Year", "2010", "int", "<"},
 				{"Price", "100", "int", "<"}
 		};
-		*/	
+			
 		
+		String valuesToFind[][] = {
+				{"Quantity", "77939615", "int", "<"}, 
+				{"Name", "OSN", "String", "="},
+				{"Price", "94026", "int", ">"},
+				{"Quantity", "10391621", "int", "<"}
+		};
 		
-	
+	*/
 		
 		PredicateGenerator p = new PredicateGenerator();
 		String valuesToFind[][] = p.generatePredicates(noOfPredsToGen);
@@ -87,15 +97,15 @@ public class NewDriver {
 		long startTime = System.nanoTime();
 		osg.initializeQueryFieldsToCheck(valuesToFind);
 		long endTime = System.nanoTime();
-		System.out.println("initializeQueryFieldsToCheck took " + (endTime - startTime) + " nanoseconds");
+//		System.out.println("initializeQueryFieldsToCheck took " + (endTime - startTime) + " nanoseconds");
 		
 		startTime = System.nanoTime();
 		osg.valueDistiller(valuesToFind);
 		endTime = System.nanoTime();
-		System.out.println("valueDistiller took " + (endTime - startTime) + " nanoseconds");
-//		osg.printMetaDataHolders();
+//		System.out.println("valueDistiller took " + (endTime - startTime) + " nanoseconds");
+		//osg.printMetaDataHolders();
 		//osg.randomDriverFunction();
-		System.out.println();
+//		System.out.println();
 		
 		long totalNaiveTime=0;
 		long totalOptTime=0;
@@ -109,7 +119,7 @@ public class NewDriver {
 			startTime = System.nanoTime();
 			int sign[] = nsg.generateSig(t);
 			endTime = System.nanoTime();
-			//System.out.println("Naive Sign Generator took " + (endTime - startTime) + " nanoseconds");
+//			System.out.println("Naive Sign Generator took " + (endTime - startTime) + " nanoseconds");
 			totalNaiveTime +=endTime - startTime;
 			
 			/*
@@ -124,7 +134,7 @@ public class NewDriver {
 			startTime = System.nanoTime();
 			osg.triggerSignatureSet(t);
 			endTime = System.nanoTime();
-			//System.out.println("Optimized Signature Generator took " + (endTime - startTime) + " nanoseconds");
+//			System.out.println("Optimized Signature Generator took " + (endTime - startTime) + " nanoseconds");
 			totalOptTime +=endTime - startTime;
 			
 //			int sign2[] = osg.returnSignBits();
@@ -136,8 +146,11 @@ public class NewDriver {
 		long avgNaiveTime = totalNaiveTime/noOfConsecutiveRuns;
 		long avgOptTime = totalOptTime/noOfConsecutiveRuns;
 		
-		System.out.println("Average Naive runtime : "+avgNaiveTime);
-		System.out.println("Average Opt runtime : "+avgOptTime);
+//		System.out.println("Average Naive runtime : "+avgNaiveTime);
+//		System.out.println("Average Opt runtime : "+avgOptTime);
+		
+		System.out.print(avgNaiveTime+"\t"+avgOptTime);
+		System.out.println();
 		
 		//osg.printSignBits();
 //		osg.printEqHash();

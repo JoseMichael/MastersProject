@@ -30,6 +30,8 @@ public class MetaDataHolder {
 	
 	public void printList()
 	{
+		System.out.println("Element name is : "+elementName);
+		
 		for(int i=0; i<listOfValues.size(); i++)
 		{
 			AddressAndValue element = listOfValues.get(i);

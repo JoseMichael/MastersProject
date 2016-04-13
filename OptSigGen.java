@@ -50,7 +50,7 @@ public class OptSigGen {
 							(incomingQueryFields[iter][indexOfElementName]==incomingQueryFields[initalCounter][indexOfElementName]))
 					{
 						//eqValsHolder.add(String.valueOf(iter));
-						String address = String.valueOf(iter);
+						int address = iter;
 						String value = incomingQueryFields[iter][indexOfElementValue];
 						AddressAndValue anv = new AddressAndValue(address, value);
 						eqValsHolder.addAddressValue(anv);
@@ -59,8 +59,13 @@ public class OptSigGen {
 					(incomingQueryFields[iter][indexOfElementName]==incomingQueryFields[initalCounter][indexOfElementName]))
 					{
 //						lessValsHolder.add(String.valueOf(iter));
-						String address = String.valueOf(iter);
+						int address = iter;
 						String value = incomingQueryFields[iter][indexOfElementValue];
+						
+						//TODO: Delete debugging junk
+//						if(value.equals("ZIOP"))
+//							System.out.println("WHAAAAAAAAAAAT");
+						
 						AddressAndValue anv = new AddressAndValue(address, value);
 						lessValsHolder.addAddressValue(anv);
 					}
@@ -68,7 +73,7 @@ public class OptSigGen {
 					(incomingQueryFields[iter][indexOfElementName]==incomingQueryFields[initalCounter][indexOfElementName]))
 					{
 //						grtrValsHolder.add(String.valueOf(iter));
-						String address = String.valueOf(iter);
+						int address = iter;
 						String value = incomingQueryFields[iter][indexOfElementValue];
 						AddressAndValue anv = new AddressAndValue(address, value);
 						grtrValsHolder.addAddressValue(anv);
@@ -91,7 +96,14 @@ public class OptSigGen {
 //		System.out.println("valueDistiller initial part took " + (endTime - startTime) + " nanoseconds");
 		
 //		startTime = System.nanoTime();
+		//TODO:Remove debugging statements
+//		System.out.println("Before removing empty shit : ");
+//		printMetaDataHolders();
+		
 		removeEmptyListsFromMetaData();
+		
+//		System.out.println("After removing empty shit : ");
+//		printMetaDataHolders();
 //		endTime = System.nanoTime();
 //		System.out.println("removeEmptyListsFromMetaData part took " + (endTime - startTime) + " nanoseconds");
 		
@@ -110,26 +122,48 @@ public class OptSigGen {
 	public void removeEmptyListsFromMetaData()
 	{
 		//used for printing val for eqVals
-		for(int i=0; i<eqVals.size(); i++)
+		int eqValSize = eqVals.size();
+		for(int i=0; i<eqValSize; i++)
 		{
 			MetaDataHolder element = eqVals.get(i);
 			if(element.isListEmpty())
+			{
 				eqVals.remove(i);
+				i--;
+				eqValSize--;
+			}
 		}
 		
-		for(int i=0; i<lessVals.size(); i++)
+		int lessValsSize = lessVals.size();
+		for(int i=0; i<lessValsSize; i++)
 		{
 			MetaDataHolder element = lessVals.get(i);
 			if(element.isListEmpty())
+			{
 				lessVals.remove(i);
+				i--;
+				lessValsSize--;
+			}
 		}
 		
-		for(int i=0; i<grtrVals.size(); i++)
+		int grtrValsSize = grtrVals.size();
+		for(int i=0; i<grtrValsSize; i++)
 		{
 			MetaDataHolder element = grtrVals.get(i);
 			if(element.isListEmpty())
+			{
 				grtrVals.remove(i);
+				i--;
+				grtrValsSize--;
+			}
 		}
+		
+		//TODO: Remove the junk below; used only for debugging
+//		for(int i=0; i<grtrVals.size(); i++)
+//		{
+//			MetaDataHolder element = grtrVals.get(i);
+//			element.printList();
+//		}
 		
 	}
 	
@@ -176,7 +210,7 @@ public class OptSigGen {
 //			}
 //		}
 		
-		for(int i=0; i<lessVals.size(); i++)
+		for(int i=0; i<grtrVals.size(); i++)
 		{
 			MetaDataHolder element = grtrVals.get(i);
 			element.printList();
@@ -230,7 +264,7 @@ public class OptSigGen {
 				//key is the value of the element and value is the position of the sign bit
 				AddressAndValue adv = element.listOfValues.get(j);
 				String key = adv.value;
-				int value = Integer.parseInt(adv.address);
+				int value = adv.address;
 				m.addToHash(key, value);
 			}
 			
@@ -318,7 +352,17 @@ public class OptSigGen {
 			MetaDataHolder element = grtrVals.get(i);
 			String elementNameToSearch = element.elementName;
 			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
+			
+			
+			//TODO: Del dbg commands
+//			long startTime = System.nanoTime();
+			
 			binarySearchOnElement(element, value, 2);
+			
+//			long endTime = System.nanoTime();
+//			System.out.println("Binary Search took " + (endTime - startTime) + " nanoseconds");
+			
+			
 		}
 //		long endTime = System.nanoTime();
 //		System.out.println("grtrVals binary search took " + (endTime - startTime) + " nanoseconds");
@@ -336,6 +380,11 @@ public class OptSigGen {
 		{
 			MetaDataHolder element = lessVals.get(i);
 			String elementNameToSearch = element.elementName;
+			
+			//TODO:Delete these debugging junk
+//			if(elementNameToSearch.equals("Name"))
+//				System.out.println("WHAT THE FUCK IS HAPPENINGGGGGGGGGGGGGGGG");
+			
 			int value = Integer.parseInt(t.findMemberValue(elementNameToSearch));
 			binarySearchOnElement(element, value, 1);
 		}
@@ -385,27 +434,32 @@ public class OptSigGen {
 			//int valOfMiddlePred = Integer.parseInt(queryFieldsToCheck[Integer.parseInt(element.get(middle))][indexOfElementValue]);
 			AddressAndValue anv = element.listOfValues.get(middle);
 			int valOfMiddlePred = Integer.parseInt(anv.value);
+//			System.out.println("Middle value is "+valOfMiddlePred);
 			if(valOfMiddlePred<value)
 			{
 				//value is in the lower half, need to set all signatures prior
 				
-				if(mode==1)
-				{
-					//setting signs for values lesser than
-//					setSignBits(element,first,middle,0);
-				}
-				else if(mode==2)
+//				long startTime = System.nanoTime();
+				
+				if(mode==2)
 				{
 					//setting signs for values greater than
 					setSignBits(element, first, middle, 1);
 				}
 				
 				first = middle + 1;
+				
+//				long endTime = System.nanoTime();
+//				System.out.println("Time in upper part is : "+(endTime-startTime));
 			}
 			else if(valOfMiddlePred == value)
 			{
 				//need to add condition here to check if multiple matches exist
 				//need to find if upper elements and lower elements are same as middle
+				
+				//TODO: Delete start and end time counters
+//				long startTime = System.nanoTime();
+				
 				int upper = middle-1;
 				if(!(upper<first))
 				{
@@ -469,30 +523,30 @@ public class OptSigGen {
 				if(mode==1)
 				{
 					setSignBits(element,lower+1,last,1);
-//					setSignBits(element,first,middle,0);
 				}
 				else if(mode==2)
 				{
-//					setSignBits(element,middle,last,0);
 					setSignBits(element,first,upper-1,1);
 				}
+				
+				
+				
+//				long endTime = System.nanoTime();
+//				System.out.println("Time in middle part is : "+(endTime-startTime));
 				
 				break;
 			}
 			else
 			{
 				//value is in the upper half, need to set signatures prior
-				
+//				long startTime = System.nanoTime();
 				if(mode==1)
 				{
 					setSignBits(element, middle, last, 1);
-				}
-				else if(mode==2)
-				{
-//					setSignBits(element, middle, last, 0);
-				}
-				
+				}				
 				last = middle-1;
+//				long endTime = System.nanoTime();
+//				System.out.println("Time in botton part is : "+(endTime-startTime));
 			}
 			
 			middle = (last+first)/2;
@@ -511,7 +565,7 @@ public class OptSigGen {
 		
 		for(int i=first; i<=last; i++)
 		{
-			int indexOfSign = Integer.parseInt(element.listOfValues.get(i).address);
+			int indexOfSign = element.listOfValues.get(i).address;
 			signGenerated[indexOfSign] = mode;
 		}
 	}
