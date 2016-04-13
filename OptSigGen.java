@@ -296,6 +296,11 @@ public class OptSigGen {
 		System.out.println();
 	}
 	
+	public int[] returnSignBits()
+	{
+		return signGenerated;
+	}
+	
 	//this function is used to trigger the signature generation as a whole
 	public void triggerSignatureSet(Tuple t)
 	{
@@ -352,11 +357,15 @@ public class OptSigGen {
 	//this function would search the hash for eqVals
 	public void hashSearchEqVals(ModHashMap m, String value)
 	{
-		int locationOfSignBit = m.findKey(value);
-		if(locationOfSignBit!=-1)
+		ArrayList<Integer> locationOfSignBit = m.findKey(value);
+		if(locationOfSignBit!=null)
 		{
 			//key exists in the hash
-			signGenerated[locationOfSignBit] = 1;
+			for(int i=0; i<locationOfSignBit.size(); i++)
+			{
+				int address = locationOfSignBit.get(i);
+				signGenerated[address] = 1;
+			}
 		}
 	}
 	
@@ -373,10 +382,10 @@ public class OptSigGen {
 		
 		while(first<=last)
 		{
-			//int valOfElement = Integer.parseInt(queryFieldsToCheck[Integer.parseInt(element.get(middle))][indexOfElementValue]);
+			//int valOfMiddlePred = Integer.parseInt(queryFieldsToCheck[Integer.parseInt(element.get(middle))][indexOfElementValue]);
 			AddressAndValue anv = element.listOfValues.get(middle);
-			int valOfElement = Integer.parseInt(anv.value);
-			if(valOfElement<value)
+			int valOfMiddlePred = Integer.parseInt(anv.value);
+			if(valOfMiddlePred<value)
 			{
 				//value is in the lower half, need to set all signatures prior
 				
@@ -393,18 +402,79 @@ public class OptSigGen {
 				
 				first = middle + 1;
 			}
-			else if(valOfElement == value)
+			else if(valOfMiddlePred == value)
 			{
+				//need to add condition here to check if multiple matches exist
+				//need to find if upper elements and lower elements are same as middle
+				int upper = middle-1;
+				if(!(upper<first))
+				{
+					//this flag checks if the upper crosses first
+					int firstCrossFlag=0;
+					AddressAndValue anvOfUpper = element.listOfValues.get(upper);
+					int valOfUpperPred = Integer.parseInt(anvOfUpper.value);
+					while(valOfUpperPred==valOfMiddlePred)
+					{
+						if(upper-1!=-1)
+							upper--;
+						else
+						{
+							firstCrossFlag = 1;
+							break;
+						}
+						//valOfMiddlePred = valOfUpperPred;
+						anvOfUpper = element.listOfValues.get(upper);
+						valOfUpperPred = Integer.parseInt(anvOfUpper.value);
+						
+					}
+					if(firstCrossFlag!=1)
+						upper++;
+				}
+				else
+				{
+					upper=middle;
+				}
+				
+				
+				int lower = middle+1;
+				if(!(lower>last))
+				{
+					//this flag checks if the lower crosses last
+					int lastCrossFlag=0;
+					AddressAndValue anvOfLower = element.listOfValues.get(lower);
+					int valOfLower = Integer.parseInt(anvOfLower.value);
+					while(valOfLower==valOfMiddlePred)
+					{
+						if(!(lower+1>last))
+							lower++;
+						else
+						{
+							lastCrossFlag=1;
+							break;
+						}
+						valOfMiddlePred = valOfLower;
+						anvOfLower = element.listOfValues.get(lower);
+						valOfLower = Integer.parseInt(anvOfLower.value);
+						
+					}
+					if(lastCrossFlag!=1)
+						lower--;
+				}
+				else
+				{
+					lower = middle;
+				}
+				
 				//value found
 				if(mode==1)
 				{
-					setSignBits(element,middle+1,last,1);
+					setSignBits(element,lower+1,last,1);
 //					setSignBits(element,first,middle,0);
 				}
 				else if(mode==2)
 				{
 //					setSignBits(element,middle,last,0);
-					setSignBits(element,first,middle-1,1);
+					setSignBits(element,first,upper-1,1);
 				}
 				
 				break;

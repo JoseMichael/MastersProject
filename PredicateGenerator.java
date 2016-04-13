@@ -4,10 +4,17 @@ import java.util.Random;
 
 public class PredicateGenerator {
 	
+	TextFileReader tfr = new TextFileReader();
+	String companyNames[] = tfr.getListOfNames();
 		
-	String listOfNames[] = {"Price","Year"};
-	int listOfValues[][] = {{0,1000},{1990,2016}};
-	String listOfOperands[] = {"<",">","="};
+	String listOfNames[] = {"Price","Quantity","Name"};
+	int listOfValuesInt[][] = {{0,100000},{0,100000000},{}};
+	String listOfValuesString[][] = {{},{},companyNames};
+	String listOfOperands[][] = {{"<",">","="},{"<",">","="},{"="}};
+	String elementType[] = {"int","int","String"};
+//	String listOfNames[] = {"Price"};
+//	int listOfValues[][] = {{0,1000000}};
+//	String listOfOperands[] = {">"};
 	
 	String predicatesList[][];
 	
@@ -23,18 +30,30 @@ public class PredicateGenerator {
 		{
 			int randomInt = r.nextInt(listOfNames.length);
 			
-			int valueRange = listOfValues[randomInt][1]-listOfValues[randomInt][0];
-			int randomVal = r.nextInt(valueRange);
-			int value = listOfValues[randomInt][0] + randomVal;
+			String value = null;
 			
-			int randomOpVal = r.nextInt(listOfOperands.length);
-			String randomOp = listOfOperands[randomOpVal];
+			if(elementType[randomInt].equals("int"))
+			{
+				int valueRange = listOfValuesInt[randomInt][1]-listOfValuesInt[randomInt][0];
+				int randomVal = r.nextInt(valueRange);
+				value = Integer.toString(listOfValuesInt[randomInt][0] + randomVal);
+			}
+			else if(elementType[randomInt].equals("String"))
+			{
+				int valueRange = listOfValuesString[randomInt].length;
+				int randomVal = r.nextInt(valueRange);
+				String stringList[] = listOfValuesString[randomInt];
+				value = stringList[randomVal];
+			}
+			
+			int randomOpVal = r.nextInt(listOfOperands[randomInt].length);
+			String randomOp = listOfOperands[randomInt][randomOpVal];
 			
 //			System.out.println(listOfNames[randomInt]+" "+value+" int "+randomOp);
 			
 			predicatesList[i][0] = listOfNames[randomInt];
-			predicatesList[i][1] = Integer.toString(value);
-			predicatesList[i][2] = "int";
+			predicatesList[i][1] = value;
+			predicatesList[i][2] = elementType[randomInt];
 			predicatesList[i][3] = randomOp;
 			
 		}
@@ -50,11 +69,12 @@ public class PredicateGenerator {
 		return predicatesList;
 			
 	}
-	
+	/*
 	public static void main(String args[])
 	{
 		PredicateGenerator p = new PredicateGenerator();
 		p.generatePredicates(100);
 	}
+	*/
 		
 }
